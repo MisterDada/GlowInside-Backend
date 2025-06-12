@@ -1,11 +1,13 @@
-// db.js
-import mysql from 'mysql2'
+// src/db.js
+import mysql from 'mysql2/promise';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const pool = mysql.createPool({
-  host: 'localhost',
-  user: 'obafemi',       // e.g., 'root' or 'myuser'
-  password: 'Obafemzy1!',
-  database: 'chatapp',             // the database you created
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
 });
 
-module.exports = pool;
+export default pool;
