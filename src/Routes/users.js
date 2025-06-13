@@ -1,15 +1,6 @@
 import pool from '../db.js'
 
 
-app.get('/users', async (req, res) => {
-  try {
-    const [rows] = await pool.query('SELECT * FROM users');
-    res.json(rows);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Database error');
-  }
-});
 
 
 app.post('/users', async (req, res) => {
