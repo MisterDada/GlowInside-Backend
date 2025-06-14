@@ -1,20 +1,18 @@
 // src/server.js
 import express from "express";
 import mongoose from "mongoose";
-import pool from "./src/db.js";
+import productRoutes from './src/Routes/products.js'
 
-const app = express();
+export const app = express();
 const PORT = 3000;
-app.use(express.json());
 
-app.get("/users", async (req, res) => {
-  try {
-    const [rows] = await pool.query("SELECT * FROM users");
-    res.json(rows);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Database error");
-  }
+//middleware
+app.use(express.json());
+app.use('/api/products', productRoutes); // base path
+
+
+app.get("/", (req, res) => {
+  res.send("Hello");
 });
 
 mongoose
