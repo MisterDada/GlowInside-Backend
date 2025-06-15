@@ -37,18 +37,18 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// router.delete("/:id", async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const products = await productModel.find({});
-//     const deletedProduct = await productModel.deleteOne(id);
-//     res.status(201).json(products);
-//   } catch (error) {
-//     res
-//       .status(500)
-//       .console.error(error)
-//       .json({ message: "could not find product or product does not exist" });
-//   }
-// });
+router.delete("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const products = await productModel.findById(id).deleteOne(id) ;
+    
+    res.status(201).json(products);
+  } catch (error) {
+    res
+      .status(500)
+      .console.error(error)
+      .json({ message: "could not find product or product does not exist" });
+  }
+});
 
 export default router;
