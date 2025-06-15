@@ -17,6 +17,10 @@ app.get("/", (req, res) => {
   res.send("Hello");
 });
 
+app.get('/api/auth/login', (req, res) => {
+  res.json({ msg: "Login route works!" });
+});
+
 app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
     });
