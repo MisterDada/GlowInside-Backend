@@ -1,7 +1,6 @@
 // src/server.js
 import express from "express";
 import mongoose from "mongoose";
-import productRoutes from './src/Routes/products.js'
 import authRoutes from './src/Routes/authRoutes.js'
 import messageRoutes from './src/Routes/messageRoutes.js'
 
@@ -10,7 +9,6 @@ const PORT = 3000;
 
 //middleware
 app.use(express.json());
-app.use('/api/products', productRoutes); // base path
 app.use('/api/auth', authRoutes);
 app.use('/api/messages', messageRoutes);
 
