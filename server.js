@@ -5,7 +5,7 @@ import authRoutes from './src/Routes/authRoutes.js'
 import messageRoutes from './src/Routes/messageRoutes.js'
 
 export const app = express();
-const PORT = 3000 || 5000;
+const PORT = process.env.PORT || 3000;
 
 //middleware
 app.use(express.json());
