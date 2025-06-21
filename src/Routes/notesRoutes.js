@@ -26,4 +26,14 @@ router.get('/notes', async (req, res) => {
         console.error(error);
     }
 })
+
+router.get('/test', async (req, res) => {
+  try {
+    const notes = await notesModel.find({});
+    res.json({ success: true, notes });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 export default router
