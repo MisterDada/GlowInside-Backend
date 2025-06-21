@@ -2,7 +2,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import authRoutes from './src/Routes/authRoutes.js'
-import messageRoutes from './src/Routes/messageRoutes.js'
+import notesRoutes from './src/Routes/notesRoutes.js'
 
 export const app = express();
 const PORT = process.env.PORT || 5000;
@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 5000;
 //middleware
 app.use(express.json());
 app.use('/api/auth', authRoutes);
-app.use('/api/messages', messageRoutes);
+app.use('/api/notes', notesRoutes);
 
 
 app.get("/", (req, res) => {
