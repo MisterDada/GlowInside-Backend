@@ -17,12 +17,13 @@ router.post('/create', async (req, res) => {
         res.status(500).json({ error: "Error creating note", error});
     }
 })
-router.get('/', async (req, res) => {
+router.get('/notes', async (req, res) => {
     try {
-        const notes = await notesModel.find().populate('user', 'username email');
+        const notes = await notesModel.find();
         res.status(200).json(notes);
     } catch (error) {
-        res.status(500).json({ error: "Error fetching notes" });
+        res.status(500).json({ error: "Error fetching notes", error });
+        console.error(error);
     }
 })
 export default router
