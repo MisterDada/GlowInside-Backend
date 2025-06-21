@@ -5,12 +5,11 @@ const router = express.Router()
 
 router.post('/create', async (req, res) => {
     try {
-        const { title, content, category, user} = req.body;
+        const { title, content, category} = req.body;
         const newNote = new notesModel({
             title,
             content,
             category,
-            user
         });
         await newNote.save();
         res.status(201).json({ message: 'Note created successfully', note: newNote });
