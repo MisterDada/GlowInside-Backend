@@ -15,7 +15,7 @@ router.post('/create', async (req, res) => {
         await newNote.save();
         res.status(201).json({ message: 'Note created successfully', note: newNote });
     } catch (error) {
-        res.status(500).json({ error: "Error creatting note"});
+        res.status(500).json({ error: "Error creating note", error});
     }
 })
 router.get('/', async (req, res) => {
