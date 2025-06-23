@@ -34,6 +34,7 @@ router.post("/register", async (req, res) => {
     });
   } catch (error) {
     res.status().json({ error: "Error creating user" });
+    res.status(500).json({ error: "Error creating user" });
   }
 });
 
