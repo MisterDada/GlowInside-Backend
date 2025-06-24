@@ -8,16 +8,12 @@ const router = express.Router();
 router.post("/register", async (req, res) => {
   try {
     const { username, password, email } = req.body;
-    const existingUser = await userModel.findOne({ email });
     const existingEmail = await userModel.findOne({ email });
 
-    if (existingUser) {
-      return res.status(400).json({ message: "User already exists" });
-    }
     if (existingEmail) {
       return res.status(400).json({ message: "email already in use" });
     }
-    if(!password || !email){
+    if (!password || !email) {
       return res.status(400).json({ message: "enter all fields" });
     }
 
