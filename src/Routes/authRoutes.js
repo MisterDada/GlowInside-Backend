@@ -17,7 +17,7 @@ router.post("/register", async (req, res) => {
     if (existingEmail) {
       return res.status(400).json({ message: "email already in use" });
     }
-    if(!username || !password || !email){
+    if(!password || !email){
       return res.status(400).json({ message: "enter all fields" });
     }
 
