@@ -29,7 +29,8 @@ router.post("/register-step1", async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Error in step 1 registration" });
+    // res.status(500).json({ error: "Error in step 1 registration" });
+    res.status(400).json({error})
   }
 });
 
@@ -67,16 +68,12 @@ router.post("/register-step2", async (req, res) => {
   try {
     const { userId, username } = req.body;
 
-    if (!userId || !username) {
-      return res.status(400).json({ message: "User ID and username are required" });
+    // if (!userId || !username) {
+    //   return res.status(400).json({ message: "User ID and username are required" });
+    // }
+    if(!userId){
+      return res.status(400).json({message: "no userId"})
     }
-
-    // Check if username is already taken
-    const existingUser = await userModel.findOne({ username });
-    if (existingUser) {
-      return res.status(400).json({ message: "Username already in use" });
-    }
-
     // Update the user
     const user = await userModel.findByIdAndUpdate(
       userId,
@@ -101,7 +98,8 @@ router.post("/register-step2", async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Error in step 2 registration" });
+    console.error("Register step 2 error:", error);
+    res.status(400).json({ error: "Error in step 2 registration" });
   }
 });
 

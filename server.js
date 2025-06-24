@@ -3,6 +3,9 @@ import express from "express";
 import mongoose from "mongoose";
 import authRoutes from './src/Routes/authRoutes.js'
 import notesRoutes from './src/Routes/notesRoutes.js'
+import dotenv from "dotenv"
+
+dotenv.config();
 
 export const app = express();
 const PORT = process.env.PORT || 5000;
