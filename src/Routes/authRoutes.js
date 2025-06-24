@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post("/register", async (req, res) => {
   try {
-    const { password, email } = req.body;
+    const { username, password, email } = req.body;
 
     // Validate all fields
     if (!password || !email) {
@@ -21,7 +21,7 @@ router.post("/register", async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new userModel({ password: hashedPassword, email });
+    const user = new userModel({ username, password: hashedPassword, email });
     await user.save();
 
     // Check JWT secret
@@ -47,8 +47,8 @@ router.post("/register", async (req, res) => {
 
 router.post("/login", async (req, res) => {
   try {
-    const { username, password } = req.body;
-    const user = await userModel.findOne({ username });
+    const { email, password } = req.body;
+    const user = await userModel.findOne({ email });
 
     if (!user) {
       return res.status(400).json({ message: "Invalid credentials" });
@@ -65,8 +65,8 @@ router.post("/login", async (req, res) => {
       token,
       user: {
         id: user._id,
-        username: user.username,
-        email: user.email || "", // fallback if email is undefined
+        username: user.username || "", // fallback if email is undefined,
+        email: user.email 
       },
     });
   } catch (error) {
