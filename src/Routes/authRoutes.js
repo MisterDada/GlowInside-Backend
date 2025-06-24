@@ -17,6 +17,9 @@ router.post("/register", async (req, res) => {
     if (existingEmail) {
       return res.status(400).json({ message: "email already in use" });
     }
+    if(!username || !password || !email){
+      return res.status(400).json({ message: "enter all fields" });
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = new userModel({ username, password: hashedPassword, email });
@@ -33,7 +36,6 @@ router.post("/register", async (req, res) => {
       },
     });
   } catch (error) {
-    res.status().json({ error: "Error creating user" });
     res.status(500).json({ error: "Error creating user" });
   }
 });
