@@ -5,43 +5,31 @@ import bcrypt from "bcryptjs";
 
 const router = express.Router();
 
-router.post("/register", async (req, res) => {
+router.post("/register-step1", async (req, res) => {
   try {
-    const { username, password, email } = req.body;
+    const { email, password } = req.body;
 
-    // Validate all fields
-    if (!password || !email) {
-      return res.status(400).json({ message: "Enter all fields" });
+    if (!email || !password) {
+      return res.status(400).json({ message: "Email and password are required" });
     }
 
-    // Check for existing email
     const existingEmail = await userModel.findOne({ email });
     if (existingEmail) {
       return res.status(400).json({ message: "Email already in use" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new userModel({ username, password: hashedPassword, email });
+    const user = new userModel({ email, password: hashedPassword });
     await user.save();
 
-    // Check JWT secret
-    if (!process.env.JWT_SECRET) {
-      return res.status(500).json({ error: "JWT secret not configured" });
-    }
-
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-
-    res.json({
-      token,
-      user: {
-        id: user._id,
-        username: user.username,
-        email: user.email || "",
-      },
+    // Optionally, return the user ID for the next step
+    res.status(201).json({
+      message: "Step 1 complete. Proceed to set username.",
+      userId: user._id
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Error creating user" });
+    res.status(500).json({ error: "Error in step 1 registration" });
   }
 });
 
@@ -71,11 +59,11 @@ router.post("/login", async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(400).json({ error: "Server error during login" }); // ✅ respond with error
+    res.status(400).json({ error: "Server error during login" }); 
   }
 });
 
-router.post("/set-username", async (req, res) => {
+router.post("/register-step2", async (req, res) => {
   try {
     const { userId, username } = req.body;
 
@@ -89,7 +77,7 @@ router.post("/set-username", async (req, res) => {
       return res.status(400).json({ message: "Username already in use" });
     }
 
-    // Update the user's username
+    // Update the user
     const user = await userModel.findByIdAndUpdate(
       userId,
       { username },
@@ -100,17 +88,20 @@ router.post("/set-username", async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+
     res.json({
-      message: "Username set successfully",
+      message: "Registration complete",
+      token,
       user: {
         id: user._id,
         username: user.username,
-        email: user.email,
-      },
+        email: user.email
+      }
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Error setting username" });
+    res.status(500).json({ error: "Error in step 2 registration" });
   }
 });
 
