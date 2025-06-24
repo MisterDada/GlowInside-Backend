@@ -7,17 +7,11 @@ const router = express.Router();
 
 router.post("/register", async (req, res) => {
   try {
-    const { username, password, email } = req.body;
+    const { password, email } = req.body;
 
     // Validate all fields
     if (!password || !email) {
       return res.status(400).json({ message: "Enter all fields" });
-    }
-
-    // Check for existing username
-    const existingUser = await userModel.findOne({ username });
-    if (existingUser) {
-      return res.status(400).json({ message: "Username already in use" });
     }
 
     // Check for existing email
@@ -27,7 +21,7 @@ router.post("/register", async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new userModel({ username, password: hashedPassword, email });
+    const user = new userModel({ password: hashedPassword, email });
     await user.save();
 
     // Check JWT secret
@@ -78,6 +72,45 @@ router.post("/login", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(400).json({ error: "Server error during login" }); // ✅ respond with error
+  }
+});
+
+router.post("/set-username", async (req, res) => {
+  try {
+    const { userId, username } = req.body;
+
+    if (!userId || !username) {
+      return res.status(400).json({ message: "User ID and username are required" });
+    }
+
+    // Check if username is already taken
+    const existingUser = await userModel.findOne({ username });
+    if (existingUser) {
+      return res.status(400).json({ message: "Username already in use" });
+    }
+
+    // Update the user's username
+    const user = await userModel.findByIdAndUpdate(
+      userId,
+      { username },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({
+      message: "Username set successfully",
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error setting username" });
   }
 });
 
