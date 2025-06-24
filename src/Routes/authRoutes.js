@@ -36,7 +36,7 @@ router.post("/register", async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({ error: "Error creating user" });
+    res.status(400).json({ error: "Error creating user" });
   }
 });
 
@@ -66,7 +66,7 @@ router.post("/login", async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Server error during login" }); // ✅ respond with error
+    res.status(400).json({ error: "Server error during login" }); // ✅ respond with error
   }
 });
 
