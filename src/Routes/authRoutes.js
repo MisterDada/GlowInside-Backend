@@ -30,7 +30,7 @@ router.post("/register-step1", async (req, res) => {
   } catch (error) {
     console.error(error);
     // res.status(500).json({ error: "Error in step 1 registration" });
-    res.status(400).json({error})
+    res.status(404).json({error})
   }
 });
 
@@ -38,6 +38,10 @@ router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await userModel.findOne({ email });
+
+    if(!email || !password){
+      return res.status(400).json({ message: "Email and password are required" });
+    }
 
     if (!user) {
       return res.status(400).json({ message: "Invalid credentials" });

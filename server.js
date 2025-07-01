@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import authRoutes from './src/Routes/authRoutes.js'
 import notesRoutes from './src/Routes/notesRoutes.js'
 import dotenv from "dotenv"
+import connectDB from "./config/db.js";
 
 dotenv.config();
 
@@ -28,14 +29,4 @@ app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
     });
 
-mongoose
-  .connect(
-    "mongodb+srv://obafemi:obafemi@backend.k4juqxb.mongodb.net/?retryWrites=true&w=majority&appName=Backend"
-  )
-  .then(() => {
-    console.log("connected to database");
-    
-  })
-  .catch((error) => {
-    console.error(error + "Could not connect");
-  });
+connectDB();
