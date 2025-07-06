@@ -1,7 +1,11 @@
 import mongoose from "mongoose";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const connectDB = async () => {
   try {
+    console.log(process.env.MONGO_URL);
     mongoose
       .connect(process.env.MONGO_URL)
       .then(() => {
@@ -11,7 +15,7 @@ const connectDB = async () => {
         console.error(error + "Could not connect");
       });
   } catch (error) {
-    console.error("Could not connect to db", error)
+    console.error("Could not connect to db", error);
   }
 };
 

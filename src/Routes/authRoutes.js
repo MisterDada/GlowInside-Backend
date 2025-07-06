@@ -5,12 +5,16 @@ import bcrypt from "bcryptjs";
 
 const router = express.Router();
 
+console.log("Auth routes loaded");
+
 router.post("/register-step1", async (req, res) => {
   try {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({ message: "Email and password are required" });
+      return res
+        .status(400)
+        .json({ message: "Email and password are required" });
     }
 
     const existingEmail = await userModel.findOne({ email });
@@ -22,15 +26,17 @@ router.post("/register-step1", async (req, res) => {
     const user = new userModel({ email, password: hashedPassword });
     await user.save();
 
+    if (!res.ok) {
+      res.status(500).json({ message: "Could not register new user" });
+    }
     // Optionally, return the user ID for the next step
     res.status(201).json({
       message: "Step 1 complete. Proceed to set username.",
-      userId: user._id
+      userId: user._id,
     });
   } catch (error) {
     console.error(error);
-    // res.status(500).json({ error: "Error in step 1 registration" });
-    res.status(404).json({error})
+    res.status(500).json({ error: "Error in step 1 registration" }, error);
   }
 });
 
@@ -39,8 +45,10 @@ router.post("/login", async (req, res) => {
     const { email, password } = req.body;
     const user = await userModel.findOne({ email });
 
-    if(!email || !password){
-      return res.status(400).json({ message: "Email and password are required" });
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ message: "Email and password are required" });
     }
 
     if (!user) {
@@ -59,12 +67,11 @@ router.post("/login", async (req, res) => {
       user: {
         id: user._id,
         username: user.username || "", // fallback if email is undefined,
-        email: user.email 
+        email: user.email,
       },
     });
   } catch (error) {
-    console.error(error);
-    res.status(400).json({ error: "Server error during login" }); 
+    res.status(400).json({ error: "Server error during login" });
   }
 });
 
@@ -75,8 +82,8 @@ router.post("/register-step2", async (req, res) => {
     // if (!userId || !username) {
     //   return res.status(400).json({ message: "User ID and username are required" });
     // }
-    if(!userId){
-      return res.status(400).json({message: "no userId"})
+    if (!userId) {
+      return res.status(400).json({ message: "no userId" });
     }
     // Update the user
     const user = await userModel.findByIdAndUpdate(
@@ -97,8 +104,8 @@ router.post("/register-step2", async (req, res) => {
       user: {
         id: user._id,
         username: user.username,
-        email: user.email
-      }
+        email: user.email,
+      },
     });
   } catch (error) {
     console.error(error);
