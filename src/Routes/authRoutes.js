@@ -26,9 +26,10 @@ router.post("/register-step1", async (req, res) => {
     const user = new userModel({ email, password: hashedPassword });
     await user.save();
 
-    if (!res.ok) {
-      res.status(500).json({ message: "Could not register new user" });
-    }
+    // if (!res.ok) {
+    //   res.status(500).json({ message: "Could not register new user" });
+    //   console.log(error);
+    // }
     // Optionally, return the user ID for the next step
     res.status(201).json({
       message: "Step 1 complete. Proceed to set username.",
